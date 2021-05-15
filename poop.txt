@@ -1,0 +1,15 @@
+- - - - - - - - - - - - - - - - - - - - - - - -
+
+          Y G R 
+          R W R 
+          O Y G 
+
+B B G     W R O     Y G B     W O O     
+G G W     O R B     O B G     W O Y     
+W Y Y     R W B     W B Y     G W G     
+
+          R R R 
+          O Y Y 
+          B B O 
+
+- - - - - - - - - - - - - - - - - - - - - - - -
