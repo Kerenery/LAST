@@ -8,7 +8,34 @@
 #include <ctime>
 #include <set>
 
+// код говно
 using namespace std;
+
+
+typedef map<int, char> ic;
+typedef set<int, char> is;
+typedef vector<pair<int, char>> vic;
+
+// glut 3d vector, not like a real class, but a structure
+class Vector {
+public:
+	float x, y, z, posx, posy, posz;
+};
+
+
+class Side {
+private:
+	// default colours
+	vector<char> col = { 'W', 'G', 'R', 'B', 'O', 'Y' };
+
+public:
+	void Change_col(vector<char> col) {
+		this->col = col;
+	}
+	char RightSide(int i) {
+		return col[i];
+	}
+};
 
 class Small_Cube {
 private:
@@ -126,42 +153,16 @@ public:
 };
 
 
-typedef map<int, char> ic;
-typedef set<int, char> is;
-typedef vector<pair<int, char>> vic;
-
-// glut 3d vector, not like a real class, but a structure
-class Vector {
-public:
-	float x, y, z, posx, posy, posz;
-};
-
-
-class Side {
-private:
-	// default colours
-	vector<char> col = { 'W', 'G', 'R', 'B', 'O', 'Y' };
-
-public:
-	void Change_col(vector<char> col) {
-		this->col = col;
-	}
-	char RightSide(int i) {
-		return col[i];
-	}
-};
-
-
 class Ccube :public Side {
 private:
 	int k;
 	int swaps;
 	vector<vector<char>> cube;
-
+	// для отрисовки
 	int _angle[3];
 	bool ok[3][3][3];
 	Small_Cube tmp[3][3];
-	// 27 частей
+	// 27 parts
 	Small_Cube a[3][3][3];
 	// храним угол поворота каждой грани
 	int rotate[6];
@@ -170,22 +171,21 @@ private:
 	// цвета граней
 	unsigned int color[6];
 	// скорость поворота, должно быть 90 % speed_torn = 0 
-	// 3
-	int speed_torn = 3;
+	int speed_torn = 12;
 
 
 	// 
-	// 		   5 6 7
-	// 		   4 8 0
-	// 		   3 2 1
+	// 		      5 6 7
+	// 		      4 8 0
+	// 		      3 2 1
 
 	//    6 7 0   6 7 0   6 7 0   6 7 0
 	//    5 8 1   6 8 1   5 8 1   5 8 1
 	//    4 3 2   4 3 2   4 3 2   4 3 2
 
-	// 		   3 2 1
-	// 		   4 8 0
-	// 		   5 6 7
+	// 		      3 2 1
+	// 		      4 8 0
+	// 		      5 6 7
 	// 
 
 	void clockRot(char col) {
@@ -203,7 +203,7 @@ private:
 			swap(cube[0][0], cube[0][4]);
 			swap(cube[0][1], cube[0][3]);
 
-			// вращение прилежащих сторон, не знаю, как по-английски 
+			// rot adj
 
 			swap(cube[3][0], cube[4][0]);
 			swap(cube[3][7], cube[4][7]);
@@ -340,7 +340,7 @@ private:
 
 	}
 
-	void aclockRot(int col) {
+	void aclockRot(char col) {
 
 		clockRot(col);
 		clockRot(col);
@@ -479,7 +479,7 @@ public:
 
 	void Save() {
 
-		ofstream fout("poop.txt");
+		ofstream fout("saved.txt");
 
 		fout << "- - - - - - - - - - - - - - - - - - - - - - - -";
 		fout << '\n';
@@ -1032,7 +1032,7 @@ public:
 
 				}
 
-				else if (cube[5][2] = 'B') {
+				else if (cube[5][2] == 'B') {
 
 					middle_place_Left_alg('B', 'R');
 
@@ -1050,7 +1050,7 @@ public:
 
 				}
 
-				else if (cube[5][0] = 'O') {
+				else if (cube[5][0] == 'O') {
 
 					middle_place_Left_alg('O', 'B');
 
@@ -1067,7 +1067,7 @@ public:
 					middle_place_Right_alg('O', 'B');
 
 				}
-				else if (cube[5][6] = 'G') {
+				else if (cube[5][6] == 'G') {
 
 					middle_place_Left_alg('G', 'O');
 
@@ -1084,7 +1084,7 @@ public:
 
 				}
 
-				else if (cube[5][4] = 'R') {
+				else if (cube[5][4] == 'R') {
 
 					middle_place_Left_alg('R', 'G');
 
@@ -1429,7 +1429,7 @@ public:
 		srand(time(0));
 		int rot;
 		vic vc;
-		swaps = rand() % 200 + 50;
+		swaps = rand() % 100 + 20;
 		int col;
 		// vc.resize(swaps);
 
@@ -1631,8 +1631,7 @@ public:
 		}
 	}
 	const int CUBE_SIZE = 13;
-	// 5
-	int TIMER = 500;
+	int TIMER = 1;
 
 	// проекции угла поворота на оси
 	int xRot = 24;
@@ -1648,7 +1647,6 @@ public:
 		glTranslatef(0, 0, translateZ);
 		glRotatef(xRot, 1, 0, 0);
 		glRotatef(yRot, 0, 1, 0);
-		// glRotatef(70, 0, 0, 1);
 		glTranslatef(CUBE_SIZE / -2.0, CUBE_SIZE / -2.0, CUBE_SIZE / -2.0);
 		draw();
 		glPopMatrix();
@@ -1791,20 +1789,11 @@ public:
 };
 
 
-
-
-
 const int CUBE_SIZE = 13;
-// 5
-const int TIMER = 500;
-// обозначаем цвета            g           b        y         w         o          r  
-// for girls
-// unsigned int color[6] = { 0xD2691E, 0xFF00FF, 0xBC8F8F, 0x000080, 0x87CEFA, 0x48D1CC };
-// pinky
-// unsigned int color[6] = { 0x4B0082, 0xEE82EE, 0xDA70D6, 0xFF00FF, 0x6A5ACD, 0x8A2BE2 };
-//awesome bambilbi
-// unsigned int color[6] = { 0xFFD700, 0x000000, 0xFFD700, 0x000000, 0xFFD700, 0x000000 };
-unsigned int color[6] = { 0xFFD700, 0x000000, 0x9370DB, 0xE6E6FA, 0x8A2BE2, 0x00FF00 };
+const int TIMER = 1;
+// обозначаем цвета
+unsigned int color[6] = { 0x00FF00, 0x0000FF, 0xFFFF00, 0xFFFFFF, 0xFF6800, 0xFF0000 };
+
 //0xFFFF00 - yellow
 //0x0000FF - blue
 //0x00FF00 - green
@@ -1846,9 +1835,7 @@ void reshape(int w, int h) {
 
 void init() {
 	// цвет фона
-
 	glClearColor(0.482, 0.408, 0.933, 0.0);
-	
 
 	// освещение
 	float mat_specular[] = { 0.3, 0.3, 0.3, 0 };
@@ -1871,9 +1858,7 @@ void init() {
 
 
 void specialKeys(int key, int, int) {
-	// клавиши влево/вправо вращают по Y
-	// клавиши вверх/вниз вращают по X
-	// F1 - возвращает в начальное положение
+
 	if (key == GLUT_KEY_DOWN) {
 		xRot += 3;
 		if (xRot >= 360)
@@ -1912,34 +1897,35 @@ void specialKeys(int key, int, int) {
 		glutPostRedisplay();
 	}
 
-	///???
-	//if (key == GLUT_KEY_F1) {
-	//	kubik.clear(CUBE_SIZE, color);
-	//    glutPostRedisplay();
-	//}
+
+	if (key == GLUT_KEY_F1) {
+		kubik.clear(CUBE_SIZE, color);
+		glutPostRedisplay();
+	}
+
 }
 
 
-//void keys (unsigned char key, int, int) {
-//	if (cube.current == -1 && key == '1') {
-//        cube.RoatateG();
-//    }
-//	else if (cube.current == -1 && key == '2') {
-//        cube.RoatateW();
-//    }
-//	else if (cube.current == -1 && key == '3') {
-//        cube.RoatateY();
-//    }
-//	else if (cube.current == -1 && key == '4') {
-//        cube.RoatateR();
-//    }
-//	else if (cube.current == -1 && key == '5') {
-//        cube.RoatateB();
-//    }
-//	else if (cube.current == -1 && key == '6') {
-//        cube.RoatateO();
-//    }
-//}
+void keys(unsigned char key, int, int) {
+	if (kubik.current == -1 && key == 'W') {
+		kubik.rot('W');
+	}
+	else if (kubik.current == -1 && key == 'R') {
+		kubik.rot('R');
+	}
+	else if (kubik.current == -1 && key == 'Y') {
+		kubik.rot('Y');
+	}
+	else if (kubik.current == -1 && key == 'O') {
+		kubik.rot('O');
+	}
+	else if (kubik.current == -1 && key == 'G') {
+		kubik.rot('G');
+	}
+	else if (kubik.current == -1 && key == 'B') {
+		kubik.rot('B');
+	}
+}
 
 void timer(int) {
 	glutTimerFunc(TIMER, timer, 0);
@@ -1962,32 +1948,73 @@ void processMenu(int option) {
 	case 2:
 		kubik.solve();
 		break;
+	case 3:
+		cout << '\n' << "Nikolay Kondratev m3111" << '\n' << "email is djhitekdieant@gmail.com" << '\n' << "Git: " << '\n' << "https://github.com/Kornely-little-dev" << endl;
+		break;
+	case 4:
+		cout << '\u2344' << endl;
+		wcout << ".⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠰⣤⣤⢀" << '\n'
+			<< "⠄⠄⠄⠄⠄⠄⠄⣀⣀⣀⠄⠄⢿⣿⣦⠈⢄" << '\n'
+			<< "⠄⠄⠄⠄⠄⠈⠻⣿⣶⣦⣍⠐⢼⣿⣿⣧⠈⡄" << '\n'
+			<< "⠄⠄⠄⠄⠄⠄⠄⠈⢿⣿⣿⣷⣄⣿⣿⣿⣦⣴⣦⣀" << '\n'
+			<< "⠄⠄⠄⠄⢀⢠⣄⣒⣚⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧" << '\n'
+			<< "⠄⠄⠄⠰⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧⣤⣤⣤⣄" << '\n'
+			<< "⠄⠄⠄⠄⠄⠄⠉⠻⢿⣿⣿⣿⡽⣿⠟⢃⣿⠟⡉⣿⣿⣿⣿⣿⠿⠛⠉" << '\n'
+			<< "⠄⠄⠄⠄⠄⠠⠶⢯⣭⣿⢹⡟⢶⣗⠄⢸⠇⢁⣠⠫⠟⣹⣿⣯⡭⠶⠂" << '\n'
+			<< "⠄⠄⠄⠄⠄⠄⠄⠄⠈⢙⣄⠣⠁⠈⠓⠊⠐⠃⠄⠄⣰⣿⣏⡀" << '\n'
+			<< "⠄⠄⠄⠄⠄⠄⠄⠄⠄⠉⢉⣽⠄⠄⠄⠄⠄⠄⠄⣿⣯⠉⠉" << '\n'
+			<< "⠄⠄⠄⠄⠄⠄⠄⠄⠄⣠⣿⣿⡀⠄⠄⠄⠄⠄⠄⣿⣿⣷⡀" << '\n'
+			<< "⠄⠄⠄⠄⠄⠄⢀⣴⣾⣿⣿⣿⣷⡀⠄⠄⠄⠄⢠⣿⣿⣿⣷⣦⣄⡀" << '\n'
+			<< "⠄⠄⠄⠄⣰⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀" << '\n'
+			<< "⠄⠄⢀⠘⢛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⢿⣿⣿⣿⠗⠄" << '\n'
+			<< "⠄⢀⣧⣀⡀⠶⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣏⣠⣀⣀⣿⡿⠃⢢⣠⡆" << '\n'
+			<< "⠄⢸⠿⣿⡿⣷⡿⠿⣿⢿⡿⠩⢹⣿⡟⠉⠉⠉⢹⣿⢻⠛⠛⠻⢿⣿⣷⣿⣿⠉⠟" << '\n'
+			<< "⠄⡾⢶⣿⣦⣿⣷⡇⢁⠚⡇⠐⢀⣿⣷⣤⣤⣤⣿⣧⣀⣠⣇⡰⢀⡿⣿⣿⣷⣾⣶⡀" << '\n'
+			<< "⢰⣵⡎⠹⣿⣿⣿⣁⣾⢻⣿⢻⣟⣩⣿⣿⣿⣿⣿⣿⣿⣿⣿⣥⣾⣿⡿⠛⠛⢛⡟⢇" << '\n'
+			<< "⣾⣿⣞⣰⠞⣩⣿⣻⡇⢠⠃⠸⠉⠙⣿⣿⣿⣿⢈⡁⠤⠁⠌⢉⢙⣿⣐⣧⣤⣾⢇⢸" << '\n'
+			<< "⢹⡿⢿⢋⡍⢇⠛⣿⣧⣼⣦⣴⣔⣠⣿⣿⣿⣯⣦⣤⣦⣤⣦⣄⣸⡻⢛⠋⠉⠻⠿⡇" << '\n'
+			<< "⠄⡰⠄⣆⣷⣴⣶⠿⣿⡿⣿⢿⣿⣿⣿⣿⣿⢿⡿⢿⣿⢉⠉⣿⣿⣷⣾⣤⣭⡁⠂⠄" << '\n'
+			<< "⠄⢱⣾⣿⣿⣿⣿⠐⣉⣌⠇⠐⠁⡄⣿⣿⣿⠈⡠⢾⡇⠠⠠⣼⣽⡟⢣⠄⣹⣿⡖" << '\n'
+			<< "⠄⠄⢿⣉⠁⣿⣷⣿⡟⢿⡵⣾⣶⣦⣿⣿⣿⣴⣷⣾⣷⠖⡴⠿⣿⣿⠷⠚⢛⡻⠁" << '\n'
+			<< "⠄⠄⠈⢿⣆⣿⣿⣿⣧⠐⡅⢘⠃⣿⣿⣿⣟⠿⡿⣿⣧⣈⠴⢃⠘⣻⣿⣿⡟" << '\n'
+			<< "⠄⠄⠄⢰⢻⣿⠃⢸⣿⣶⣿⡿⡟⢉⣿⢿⣻⣼⣧⠂⠛⢿⣷⣟⣀⣥⡼⠋" << '\n'
+			<< "⠄⠄⠄⣾⣏⡙⣿⣾⣿⣿⠿⢄⠉⣸⡿⠁⠉⠉⠟⢬⢛⢚⠻⣿⣿⠛" << '\n'
+			<< "⠄⠄⠄⣿⣷⣦⣅⣙⣿⣧⣮⣬⣽⡟⠄⠄⠄⠄⢶⣶⣮⢧⢠⠙⣰⢹⣦" << '\n'
+			<< "⠄⠄⠄⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠄⠄⠄⠄⠄⣈⣽⣶⣿⣿⣷⣼⠟⠆" << '\n'
+			<< "⠄⠄⠄⠘⢥⣏⢿⢯⣿⡟⠄⣿⣿⣿⣶⣄⣠⢈⠲⠟⣛⠏⣍⣏⠬⣄⡺" << '\n'
+			<< "⠄⠄⠄⠄⢸⣿⣿⣾⣿⣃⣧⣿⣿⣿⣿⣿⣧⣒⣴⣦⣾⣶⣾⣶⣿⡇" << endl;
+
+		break;
 	}
 }
 
 void createGLUTMenus() {
 	glutCreateMenu(processMenu);
 
-	glutAddMenuEntry("Случайное состояние", 1);
-	glutAddMenuEntry("СборОчка", 2);
+	glutAddMenuEntry("Случайное положение", 1);
+	glutAddMenuEntry("Сборка текущего состояния", 2);
+	glutAddMenuEntry("Доп. информация", 3);
+	glutAddMenuEntry("flex", 4);
 
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 int main(int argc, char** argv) {
+
 	kubik.Resize_cube();
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(800, 700);
-	glutInitWindowPosition(1, 1);
-	glutCreateWindow("Cube");
+	glutInitWindowSize(600, 500);
+	glutInitWindowPosition(1320, 550);
+	glutCreateWindow("Пожилая черепашка");
 	init();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
-	//glutKeyboardFunc(keys);
+	glutKeyboardFunc(keys);
 	glutTimerFunc(TIMER, timer, 0);
 	glutSpecialFunc(specialKeys);
 	createGLUTMenus();
 	glutMainLoop();
+
 	return 0;
 }
